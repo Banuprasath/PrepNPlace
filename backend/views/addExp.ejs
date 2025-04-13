@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add New Experience</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container mt-5">
+    <h2 class="mb-4 text-center">Add New Experience</h2>
+    
+    <form action="/experiences/add" method="POST">
+      <div class="mb-3">
+        <label class="form-label">Candidate Name</label>
+        <input type="text" name="name" class="form-control" required>
+      </div>
+      
+      <div class="mb-3">
+        <label class="form-label">Reg No:</label>
+        <input type="text" name="regno" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input type="email" name="email" class="form-control" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Company</label>
+        <select name="company" class="form-select" id="company" required>
+          <option value="" disabled selected>Select company</option>
+        </select>
+      </div>
+
+      <!-- <div class="mb-3">
+        <label class="form-label">Read Link (Google Drive)</label>
+        <input type="url" name="readLink" class="form-control" required>
+      </div> -->
+
+      <div class="mb-3">
+        <label class="form-label">Domain (eg: DSA, Web, ML)</label>
+        <input type="text" name="domain" class="form-control" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Graduation Year</label>
+        <input type="number" name="year" class="form-control" min="2020" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Intern Type</label>
+        <select name="type" class="form-select" required>
+          <option value="" disabled selected>Select type</option>
+          <option value="6 Months Intern only">6 Months Intern only</option>
+          <option value="Intern + FTE">Intern + FTE</option>
+          <option value="FTE only">FTE only</option>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Preparation Strategy</label>
+        <textarea name="preparationStrategy" class="form-control" rows="5" required></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Placement Drive Experience</label>
+        <textarea name="placementExperience" class="form-control" rows="5" required></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Tips and Tricks</label>
+        <textarea name="tipsAndTricks" class="form-control" rows="5" required></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Preparation Playlist</label>
+        <textarea name="preparationPlaylist" class="form-control" rows="5" required></textarea>
+      </div>
+      <input type="hidden" name="visibility" value="None">
+
+      <div class="mb-3">
+        <label class="form-label">Bonus</label>
+        <textarea name="bonus" class="form-control" rows="5" required></textarea>
+      </div>
+      
+      
+      <button type="submit" class="btn btn-primary">Add Experience</button>
+    </form>
+  </div>
+
+  <script>
+    const companyNames = [
+      "ACCENTURE", "ACCOLITE", "AMAZON", "AMERICAN EXPRESS", "APPIAN", "APPLE", "APTIV", "ARCADIA", "ATHENAHEALTH",
+      "BANK OF AMERICA", "BARCLAYS", "BLUE YONDER", "BNY", "CATERPILLAR", "CHRONUS", "CITI", "CODESTAX.AI", "COMPLYANCE",
+      "CONGRUENT", "D. E. SHAW", "DOVER", "EUCLOID DATA SOLUTIONS", "FEDEX", "FIDELITY", "FORD", "GAVS", "GIGAMON",
+      "ICANIO TECHNOLOGIES", "IDFC FIRST BANK", "INFINERA", "J K FENNER", "JOHN DEERE", "KLA", "LARSEN & TURBO", "LATENTVIEW",
+      "LISTER TECHNOLOGIES", "LOGITECH", "MINDGATE", "MORGAN STANLEY", "NCR VOYIX", "NORTONLIFELOCK", "OPTUM", "ORACLE",
+      "RAMCO SYSTEMS", "RANDOMWALK.AI", "SAGENT", "SAP LABS", "SEARCE", "SECUREW2", "SOCIETE GENERALE", "STANDARD CHARTERED GBS",
+      "STARTENS SYSTEM", "TATA DIGITAL", "TCS", "TEJAS NETWORKS", "TEKION", "TRIMBLE", "VEGROW", "VERIZON", "VIASAT", "VISA",
+      "VIVRITI CAPITAL", "VOLVO", "WALMART", "WELLS FARGO", "ZOOMRX"
+    ];
+
+    const select = document.getElementById("company");
+
+    companyNames.forEach(company => {
+      const option = document.createElement("option");
+      option.value = company;
+      option.textContent = company;
+      select.appendChild(option);
+      
+    });
+  </script>
+
+</body>
+</html>
