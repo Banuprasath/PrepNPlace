@@ -19,7 +19,7 @@ const ExperienceSchema = new Schema({
     placementExperience: String,
     tipsAndTricks: String,
     readLink:String,
-    visiblity: String
+    visibility: String
 }, { timestamps: true });
 
 module.exports = mongoose.model("Experience", ExperienceSchema);

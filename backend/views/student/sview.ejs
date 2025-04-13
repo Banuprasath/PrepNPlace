@@ -39,8 +39,8 @@
                     <th>Year</th>
                     <th>Intern Type</th>
                     <th>Preview</th>
-                    <th>Accept</th>
-                    <th>Deny</th>
+                    <th>Edit</th>
+                    
                     <th>Delete</th>
                 </tr>
             </thead>
@@ -54,23 +54,29 @@
                         <td><%= experience.year %></td>
                         <td><%= experience.type %></td>
                         <td><a href="<%= experience.readLink %>" target="_blank" class="btn btn-secondary">Preview</a></td>
+                        <td><a href="/edit/<%=experience._id%>">Edit</a></td>
+                        <td>Delete</td>
+                       
+                        <!--
                         <td>
                             <form action="/admin/experiences/<%= experience._id %>?_method=PUT" method="POST">
                                 <input type="hidden" name="status" value="accepted">
                                 <button type="submit" class="btn btn-success">Accept</button>
                             </form>
                         </td>
+
                         <td>
-                            <form action="/admin/experiences/d/<%= experience._id %>?_method=PUT" method="POST">
+                            <form action="/admin/experiences/d/<% experience._id %>?_method=PUT" method="POST">
                                 <input type="hidden" name="status" value="denied">
                                 <button type="submit" class="btn btn-warning">Deny</button>
                             </form>
                         </td>
                         <td>
-                            <form action="/admin/experiences/<%= experience._id %>?_method=DELETE" method="POST">
+                            <form action="/admin/experiences/<% experience._id %>?_method=DELETE" method="POST">
                                 <button type="submit" class="btn btn-danger">Delete</button>
                             </form>
                         </td>
+                    -->
                     </tr>
                 <% }) %>
             </tbody>
@@ -115,11 +121,7 @@
                             <button type="submit" class="btn btn-warning">Deny</button>
                         </form>
                     </td>
-                    <td>
-                        <form action="/admin/experiences/${experience._id}?_method=DELETE" method="POST">
-                            <button type="submit" class="btn btn-danger">Delete</button>
-                        </form>
-                    </td>
+                   
                 </tr>
             `).join('');
         });
@@ -132,3 +134,13 @@
 </body>
 
 </html>
+
+
+<!--
+ <td>
+                        <form action="/admin/experiences/${experience._id}?_method=DELETE" method="POST">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </td>
+
+-->
