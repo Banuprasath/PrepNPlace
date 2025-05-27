@@ -2,113 +2,655 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Add New Experience</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add New Experience - PrepNPlace</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #2563eb;
+      --primary-light: #3b82f6;
+      --secondary-color: #64748b;
+      --success-color: #10b981;
+      --background-light: #f8fafc;
+      --border-color: #e2e8f0;
+      --text-primary: #1e293b;
+      --text-secondary: #64748b;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--background-light) 0%, #e2e8f0 100%);
+      min-height: 100vh;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    .main-container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border-color);
+      margin: 2rem auto;
+      max-width: 800px;
+      overflow: hidden;
+    }
+
+    .header-section {
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .header-section h1 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .header-section p {
+      opacity: 0.9;
+      font-size: 1rem;
+    }
+
+    .form-container {
+      padding: 2rem;
+    }
+
+    .form-section {
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: var(--background-light);
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+    }
+
+    .section-title {
+      color: var(--primary-color);
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+      font-size: 1.125rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .form-floating {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-floating > .form-control,
+    .form-floating > .form-select {
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background: white;
+      transition: all 0.2s ease;
+      font-size: 0.95rem;
+      padding: 0.75rem;
+      height: auto;
+    }
+
+    .form-floating > .form-control:focus,
+    .form-floating > .form-select:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgb(37 99 235 / 0.1);
+      background: white;
+    }
+
+    .form-floating > label {
+      color: var(--text-secondary);
+      font-weight: 500;
+      font-size: 0.875rem;
+    }
+
+    .textarea-floating {
+      position: relative;
+      margin-bottom: 1.25rem;
+    }
+
+    .textarea-floating textarea {
+      width: 100%;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background: white;
+      transition: all 0.2s ease;
+      resize: vertical;
+      min-height: 100px;
+      padding: 0.75rem;
+      font-size: 0.95rem;
+      font-family: inherit;
+    }
+
+    .textarea-floating textarea:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgb(37 99 235 / 0.1);
+      outline: none;
+    }
+
+    .textarea-floating label {
+      position: absolute;
+      top: -0.5rem;
+      left: 0.75rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+      font-size: 0.875rem;
+      background: white;
+      padding: 0 0.5rem;
+    }
+
+    /* Skills input styling */
+    .skills-container {
+      position: relative;
+    }
+
+    .skills-input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+    }
+
+    .skills-input:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgb(37 99 235 / 0.1);
+      outline: none;
+    }
+
+    .skills-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+      min-height: 2rem;
+    }
+
+    .skill-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--primary-color);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .skill-tag button {
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      padding: 0;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+
+    .skill-tag button:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-submit {
+      background: linear-gradient(135deg, var(--success-color) 0%, #059669 100%);
+      border: none;
+      border-radius: 8px;
+      padding: 0.875rem 2rem;
+      font-weight: 600;
+      font-size: 1rem;
+      color: white;
+      transition: all 0.2s ease;
+      box-shadow: var(--shadow-md);
+      cursor: pointer;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-lg);
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    }
+
+    .btn-submit:active {
+      transform: translateY(0);
+    }
+
+    .icon-input {
+      position: relative;
+    }
+
+    .icon-input i {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--primary-color);
+      font-size: 1rem;
+      z-index: 10;
+    }
+
+    .progress-indicator {
+      height: 3px;
+      background: var(--border-color);
+      border-radius: 1.5px;
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary-color) 0%, var(--primary-light) 100%);
+      width: 0%;
+      transition: width 0.3s ease;
+      border-radius: 1.5px;
+    }
+
+    .readonly-field {
+      background-color: #f1f5f9 !important;
+      cursor: not-allowed;
+    }
+
+    @media (max-width: 768px) {
+      .main-container {
+        margin: 1rem;
+        border-radius: 12px;
+      }
+      
+      .header-section {
+        padding: 1.5rem;
+      }
+      
+      .form-container {
+        padding: 1.5rem;
+      }
+
+      .form-section {
+        padding: 1rem;
+      }
+    }
+  </style>
 </head>
 <body>
-  <div class="container mt-5">
-    <h2 class="mb-4 text-center">Add New Experience</h2>
-    
-    <form action="/experiences/add" method="POST">
-      <div class="mb-3">
-        <label class="form-label">Candidate Name</label>
-        <input type="text" name="name" class="form-control" required>
-      </div>
-      
-      <div class="mb-3">
-        <label class="form-label">Reg No:</label>
-        <input type="text" name="regno" class="form-control" required>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Email</label>
-        <input type="email" name="email" class="form-control" required>
+  <div class="container-fluid">
+    <div class="main-container">
+      <div class="header-section">
+        <i class="fas fa-plus-circle fa-2x mb-3"></i>
+        <h1>Share Your Journey</h1>
+        <p>Help fellow students with your placement experience</p>
       </div>
 
-      <div class="mb-3">
-        <label class="form-label">Company</label>
-        <select name="company" class="form-select" id="company" required>
-          <option value="" disabled selected>Select company</option>
-        </select>
-      </div>
+      <div class="form-container">
+        <div class="progress-indicator">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
 
-      <!-- <div class="mb-3">
-        <label class="form-label">Read Link (Google Drive)</label>
-        <input type="url" name="readLink" class="form-control" required>
-      </div> -->
+        <form action="/experiences/add" method="POST" id="experienceForm">
+          <div class="form-section">
+            <h3 class="section-title">
+              <i class="fas fa-user"></i>
+              Personal Information
+            </h3>
+            
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-floating icon-input">
+                  <input type="text" name="name" class="form-control readonly-field" id="name" value="<%= user.name %>" readonly>
+                  <label for="name">Candidate Name</label>
+                  <i class="fas fa-user"></i>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-floating icon-input">
+                  <input type="text" name="regno" class="form-control readonly-field" id="regno"  readonly>
+                  <label for="regno">Registration Number</label>
+                  <i class="fas fa-id-card"></i>
+                </div>
+              </div>
+            </div>
 
-      <div class="mb-3">
-        <label class="form-label">Domain (eg: DSA, Web, ML)</label>
-        <input type="text" name="domain" class="form-control" required>
-      </div>
+            <div class="form-floating icon-input">
+              <input type="email" name="email" value="banu@gmail.com" class="form-control readonly-field" id="email" readonly>
+              <label for="email">Email Address</label>
+              <i class="fas fa-envelope"></i>
+            </div>
+          </div>
 
-      <div class="mb-3">
-        <label class="form-label">Graduation Year</label>
-        <input type="number" name="year" class="form-control" min="2020" required>
-      </div>
+          <div class="form-section">
+            <h3 class="section-title">
+              <i class="fas fa-building"></i>
+              Company Details
+            </h3>
+            
+            <div class="row">
+              <!-- <div class="col-md-8">
+                <div class="form-floating">
+                  <select name="company" class="form-select" id="company" required>
+                    <option value="" disabled selected>Choose your company</option>
+                  </select>
+                  <label for="company">Company Name</label>
+                </div>
+              </div> -->
+  <div class="col-md-8">
+    <div class="form-floating mb-3">
+      <select name="company" class="form-select" id="company" required>
+        <option value="" disabled selected>Choose your company</option>
+        <!-- Options will be added dynamically by JavaScript -->
+      </select>
+      <label for="company">Company Name</label>
+    </div>
 
-      <div class="mb-3">
-        <label class="form-label">Intern Type</label>
-        <select name="type" class="form-select" required>
-          <option value="" disabled selected>Select type</option>
-          <option value="6 Months Intern only">6 Months Intern only</option>
-          <option value="Intern + FTE">Intern + FTE</option>
-          <option value="FTE only">FTE only</option>
-        </select>
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">Preparation Strategy</label>
-        <textarea name="preparationStrategy" class="form-control" rows="5" required></textarea>
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">Placement Drive Experience</label>
-        <textarea name="placementExperience" class="form-control" rows="5" required></textarea>
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">Tips and Tricks</label>
-        <textarea name="tipsAndTricks" class="form-control" rows="5" required></textarea>
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">Preparation Playlist</label>
-        <textarea name="preparationPlaylist" class="form-control" rows="5" required></textarea>
-      </div>
-      <input type="hidden" name="visibility" value="None">
-
-      <div class="mb-3">
-        <label class="form-label">Bonus</label>
-        <textarea name="bonus" class="form-control" rows="5" required></textarea>
-      </div>
-      
-      
-      <button type="submit" class="btn btn-primary">Add Experience</button>
-    </form>
+    <!-- Hidden input for 'Others' -->
+    <div class="form-floating" id="otherCompanyDiv" style="display: none;">
+      <input type="text" class="form-control" name="otherCompany" id="otherCompany" placeholder="Enter your company name">
+      <label for="otherCompany">Enter your company name</label>
+    </div>
   </div>
 
+              <div class="col-md-4">
+                <div class="form-floating">
+                  <select name="type" class="form-select" id="type" required>
+                    <option value="" disabled selected>Select type</option>
+                    <option value="6 Months Intern only">6 Months Intern</option>
+                    <option value="Intern + FTE">Intern + FTE</option>
+                    <option value="FTE only">FTE Only</option>
+                  </select>
+                  <label for="type">Position Type</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-floating icon-input">
+                  <input type="text" name="domain" class="form-control" id="domain" placeholder="e.g., DSA, Web Development, ML" required>
+                  <label for="domain">Role Name</label>
+                  <i class="fas fa-code"></i>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-floating icon-input">
+                  <input type="number" name="year" class="form-control" id="year" min="2020" max="2030" placeholder="2024" required>
+                  <label for="year">Graduation Year</label>
+                  <i class="fas fa-calendar-alt"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- NEW: Skills Section -->
+          <div class="form-section">
+            <h3 class="section-title">
+              <i class="fas fa-tags"></i>
+              Skills Used
+            </h3>
+            
+            <div class="skills-container">
+              <label for="skillsInput" style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.5rem; display: block;">
+                Add skills that helped you clear the interview
+              </label>
+              <input 
+                type="text" 
+                id="skillsInput" 
+                class="skills-input" 
+                placeholder="Type a skill and press Enter (e.g., DSA, React, System Design...)"
+              >
+              <input type="hidden" name="skills" id="skillsHidden">
+              <div class="skills-tags" id="skillsTags"></div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3 class="section-title">
+              <i class="fas fa-lightbulb"></i>
+              Share Your Experience
+            </h3>
+            
+            <div class="textarea-floating">
+              <label for="preparationStrategy">Preparation Strategy</label>
+              <textarea name="preparationStrategy" class="form-control" id="preparationStrategy" placeholder="Share your preparation approach, timeline, and key focus areas..." required></textarea>
+            </div>
+
+            <div class="textarea-floating">
+              <label for="placementExperience">Placement Drive Experience</label>
+              <textarea name="placementExperience" class="form-control" id="placementExperience" placeholder="Describe the interview process, rounds, and your experience..." required></textarea>
+            </div>
+
+            <div class="textarea-floating">
+              <label for="tipsAndTricks">Tips and Tricks</label>
+              <textarea name="tipsAndTricks" class="form-control" id="tipsAndTricks" placeholder="Share valuable tips that helped you succeed..." required></textarea>
+            </div>
+
+            <div class="textarea-floating">
+              <label for="preparationPlaylist">Preparation Resources</label>
+              <textarea name="preparationPlaylist" class="form-control" id="preparationPlaylist" placeholder="List useful resources, courses, books, or playlists..." required></textarea>
+            </div>
+
+            <div class="textarea-floating">
+              <label for="bonus">Additional Insights</label>
+              <textarea name="bonus" class="form-control" id="bonus" placeholder="Any additional advice or insights you'd like to share..." required></textarea>
+            </div>
+          </div>
+
+          <input type="hidden" name="visibility" value="None">
+          
+          <div class="text-center">
+            <button type="submit" class="btn btn-submit">
+              <i class="fas fa-paper-plane me-2"></i>
+              Submit Experience
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
+    // Company names
+    // const companyNames = [
+    //   "ACCENTURE", "ACCOLITE", "AMAZON", "AMERICAN EXPRESS", "APPIAN", "APPLE", "APTIV", "ARCADIA", "ATHENAHEALTH",
+    //   "BANK OF AMERICA", "BARCLAYS", "BLUE YONDER", "BNY", "CATERPILLAR", "CHRONUS", "CITI", "CODESTAX.AI", "COMPLYANCE",
+    //   "CONGRUENT", "D. E. SHAW", "DOVER", "EUCLOID DATA SOLUTIONS", "FEDEX", "FIDELITY", "FORD", "GAVS", "GIGAMON",
+    //   "ICANIO TECHNOLOGIES", "IDFC FIRST BANK", "INFINERA", "J K FENNER", "JOHN DEERE", "KLA", "LARSEN & TURBO", "LATENTVIEW",
+    //   "LISTER TECHNOLOGIES", "LOGITECH", "MINDGATE", "MORGAN STANLEY", "NCR VOYIX", "NORTONLIFELOCK", "OPTUM", "ORACLE",
+    //   "RAMCO SYSTEMS", "RANDOMWALK.AI", "SAGENT", "SAP LABS", "SEARCE", "SECUREW2", "SOCIETE GENERALE", "STANDARD CHARTERED GBS",
+    //   "STARTENS SYSTEM", "TATA DIGITAL", "TCS", "TEJAS NETWORKS", "TEKION", "TRIMBLE", "VEGROW", "VERIZON", "VIASAT", "VISA",
+    //   "VIVRITI CAPITAL", "VOLVO", "WALMART", "WELLS FARGO", "ZOOMRX"
+    // ];
+
+    // // Populate company dropdown
+    // const select = document.getElementById("company");
+    // companyNames.forEach(company => {
+    //   const option = document.createElement("option");
+    //   option.value = company;
+    //   option.textContent = company;
+    //   select.appendChild(option);
+    // });
+
+
+
+
     const companyNames = [
-      "ACCENTURE", "ACCOLITE", "AMAZON", "AMERICAN EXPRESS", "APPIAN", "APPLE", "APTIV", "ARCADIA", "ATHENAHEALTH",
-      "BANK OF AMERICA", "BARCLAYS", "BLUE YONDER", "BNY", "CATERPILLAR", "CHRONUS", "CITI", "CODESTAX.AI", "COMPLYANCE",
-      "CONGRUENT", "D. E. SHAW", "DOVER", "EUCLOID DATA SOLUTIONS", "FEDEX", "FIDELITY", "FORD", "GAVS", "GIGAMON",
-      "ICANIO TECHNOLOGIES", "IDFC FIRST BANK", "INFINERA", "J K FENNER", "JOHN DEERE", "KLA", "LARSEN & TURBO", "LATENTVIEW",
-      "LISTER TECHNOLOGIES", "LOGITECH", "MINDGATE", "MORGAN STANLEY", "NCR VOYIX", "NORTONLIFELOCK", "OPTUM", "ORACLE",
-      "RAMCO SYSTEMS", "RANDOMWALK.AI", "SAGENT", "SAP LABS", "SEARCE", "SECUREW2", "SOCIETE GENERALE", "STANDARD CHARTERED GBS",
-      "STARTENS SYSTEM", "TATA DIGITAL", "TCS", "TEJAS NETWORKS", "TEKION", "TRIMBLE", "VEGROW", "VERIZON", "VIASAT", "VISA",
-      "VIVRITI CAPITAL", "VOLVO", "WALMART", "WELLS FARGO", "ZOOMRX"
-    ];
+    "ACCENTURE", "ACCOLITE", "AMAZON", "AMERICAN EXPRESS", "APPIAN", "APPLE", "APTIV", "ARCADIA", "ATHENAHEALTH",
+    "BANK OF AMERICA", "BARCLAYS", "BLUE YONDER", "BNY", "CATERPILLAR", "CHRONUS", "CITI", "CODESTAX.AI", "COMPLYANCE",
+    "CONGRUENT", "D. E. SHAW", "DOVER", "EUCLOID DATA SOLUTIONS", "FEDEX", "FIDELITY", "FORD", "GAVS", "GIGAMON",
+    "ICANIO TECHNOLOGIES", "IDFC FIRST BANK", "INFINERA", "J K FENNER", "JOHN DEERE", "KLA", "LARSEN & TURBO", "LATENTVIEW",
+    "LISTER TECHNOLOGIES", "LOGITECH", "MINDGATE", "MORGAN STANLEY", "NCR VOYIX", "NORTONLIFELOCK", "OPTUM", "ORACLE",
+    "RAMCO SYSTEMS", "RANDOMWALK.AI", "SAGENT", "SAP LABS", "SEARCE", "SECUREW2", "SOCIETE GENERALE", "STANDARD CHARTERED GBS",
+    "STARTENS SYSTEM", "TATA DIGITAL", "TCS", "TEJAS NETWORKS", "TEKION", "TRIMBLE", "VEGROW", "VERIZON", "VIASAT", "VISA",
+    "VIVRITI CAPITAL", "VOLVO", "WALMART", "WELLS FARGO", "ZOOMRX", "OTHERS"
+  ];
 
-    const select = document.getElementById("company");
+  const select = document.getElementById("company");
+  const otherCompanyDiv = document.getElementById("otherCompanyDiv");
 
-    companyNames.forEach(company => {
-      const option = document.createElement("option");
-      option.value = company;
-      option.textContent = company;
-      select.appendChild(option);
+  companyNames.forEach(company => {
+    const option = document.createElement("option");
+    option.value = company;
+    option.textContent = company;
+    select.appendChild(option);
+  });
+
+  select.addEventListener("change", () => {
+    if (select.value === "OTHERS") {
+      otherCompanyDiv.style.display = "block";
+      document.getElementById("otherCompany").required = true;
+    } else {
+      otherCompanyDiv.style.display = "none";
+      document.getElementById("otherCompany").required = false;
+    }
+  });
+    // Auto-fill user data (this would be populated by server-side templating)
+    // In your EJS template, you would pass the user data and populate these fields
+    document.addEventListener('DOMContentLoaded', function() {
+      // These values would be populated by EJS templating engine
+      // Example: document.getElementById('name').value = '<%= user.name %>';
+      // For now, showing placeholder - replace with actual EJS syntax
       
+      // Auto-fill from session data (you'll need to pass this from server)
+      const userData = {
+        name: '<%= typeof user !== "undefined" && user.name ? user.name : "" %>',
+        regno: '<%= typeof user !== "undefined" && user.regno ? user.regno : "" %>',
+        email: '<%= typeof user !== "undefined" && user.email ? user.email : "" %>'
+      };
+      
+      if (userData.name && userData.name !== '') {
+        document.getElementById('name').value = userData.name;
+      }
+      if (userData.regno && userData.regno !== '') {
+        document.getElementById('regno').value = userData.regno;
+      }
+      if (userData.email && userData.email !== '') {
+        document.getElementById('email').value = userData.email;
+      }
     });
-  </script>
 
+    // Skills management
+    let skills = [];
+    const skillsInput = document.getElementById('skillsInput');
+    const skillsHidden = document.getElementById('skillsHidden');
+    const skillsTags = document.getElementById('skillsTags');
+
+    function updateSkillsDisplay() {
+      skillsTags.innerHTML = '';
+      skills.forEach((skill, index) => {
+        const tag = document.createElement('div');
+        tag.className = 'skill-tag';
+        tag.innerHTML = `
+          ${skill}
+          <button type="button" onclick="removeSkill(${index})">×</button>
+        `;
+        skillsTags.appendChild(tag);
+      });
+      skillsHidden.value = skills.join(',');
+    }
+
+    function addSkill(skill) {
+      const trimmedSkill = skill.trim();
+      if (trimmedSkill && !skills.includes(trimmedSkill)) {
+        skills.push(trimmedSkill);
+        updateSkillsDisplay();
+      }
+    }
+
+    function removeSkill(index) {
+      skills.splice(index, 1);
+      updateSkillsDisplay();
+    }
+
+    skillsInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        addSkill(this.value);
+        this.value = '';
+      }
+    });
+
+    skillsInput.addEventListener('blur', function() {
+      if (this.value.trim()) {
+        addSkill(this.value);
+        this.value = '';
+      }
+    });
+
+    // Progress tracking
+    const form = document.getElementById('experienceForm');
+    const progressBar = document.getElementById('progressBar');
+    const formInputs = form.querySelectorAll('input[required], select[required], textarea[required]');
+    
+    function updateProgress() {
+      let filledInputs = 0;
+      formInputs.forEach(input => {
+        if (input.value.trim() !== '') {
+          filledInputs++;
+        }
+      });
+      
+      // Include skills in progress if any are added
+      if (skills.length > 0) {
+        filledInputs++;
+      }
+      
+      const totalFields = formInputs.length + 1; // +1 for skills
+      const progress = (filledInputs / totalFields) * 100;
+      progressBar.style.width = progress + '%';
+    }
+
+    // Add skills to progress tracking
+    function updateProgressWithSkills() {
+      updateProgress();
+    }
+
+    // Override the original updateSkillsDisplay to include progress update
+    const originalUpdateSkillsDisplay = updateSkillsDisplay;
+    updateSkillsDisplay = function() {
+      originalUpdateSkillsDisplay();
+      updateProgress();
+    };
+
+    formInputs.forEach(input => {
+      input.addEventListener('input', updateProgress);
+      input.addEventListener('change', updateProgress);
+    });
+
+    // Form validation and submission
+    form.addEventListener('submit', function(e) {
+      if (skills.length === 0) {
+        e.preventDefault();
+        alert('Please add at least one skill that helped you in the interview.');
+        skillsInput.focus();
+        return;
+      }
+      
+      const submitBtn = form.querySelector('.btn-submit');
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Submitting...';
+      submitBtn.disabled = true;
+    });
+
+    // Auto-resize textareas
+    const textareas = document.querySelectorAll('textarea');
+    textareas.forEach(textarea => {
+      textarea.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = Math.max(this.scrollHeight, 100) + 'px';
+      });
+    });
+
+    // Initial progress update
+    updateProgress();
+  </script>
 </body>
 </html>

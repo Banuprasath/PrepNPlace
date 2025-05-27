@@ -15,27 +15,26 @@ const ExperienceSchema = new Schema({
     domain: String,
     year: String,
     type: String,
+    skills: [{
+        type: String,
+        trim: true
+    }], // New field for dynamic skills
     preparationStrategy: String,
     placementExperience: String,
     tipsAndTricks: String,
-    readLink:String,
-    visibility: String
+    preparationPlaylist: String, // Added missing field from form
+    bonus: String, // Added missing field from form
+    readLink: String,
+    visibility: String,
+    status: {
+        type: String,
+        default: "pending"
+    }
 }, { timestamps: true });
 
+// Index for better search performance on skills
+ExperienceSchema.index({ skills: 1 });
+ExperienceSchema.index({ company: 1 });
+ExperienceSchema.index({ domain: 1 });
+
 module.exports = mongoose.model("Experience", ExperienceSchema);
-
-/*
-CampgroundSchema.post('findOneAndDelete',async function(doc){
-    
-
-    if(doc){
-        await Review.deleteMany({
-            _id: {
-                $in : doc.review
-            }
-        })
-    }
-
-})
-
-*/
