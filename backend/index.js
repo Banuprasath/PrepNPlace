@@ -31,7 +31,7 @@ db.once("open", () => {
   console.log("Database Connected");
 });
 
-app.listen(3000, () => {
+app.listen(3000,'0.0.0.0', () => {
     console.log("Server running on Port 3000");
 });
 
@@ -42,7 +42,7 @@ app.use(cors());
 app.get("/", async (req, res) => {
     const { search, skill, company } = req.query;
   //  let query = { visibility: { $ne: "None" } };
-      let query ={};
+      let query ={visibility :{ $ne: "None"}};
     if (search) {
         query.$or = [
             { name: { $regex: search, $options: 'i' } },
@@ -72,6 +72,7 @@ app.get("/", async (req, res) => {
         currentSearch: search || '',
         currentSkill: skill || '',
         currentCompany: company || '',
+        userStatus:  req.session.user_id
         // <-- Pass user to EJS
     });
 });
@@ -152,28 +153,38 @@ app.post("/register", async (req, res) => {
     try {
         let newUser = req.body;
         const password = newUser.password;
-        
+
         const hash = await bcrypt.hash(password, 10);
         newUser.password = hash;
-        
+
         const user = new users(newUser);
         await user.save();
-        
+
         res.status(201).render("admin/login");
     } catch (error) {
-        console.error(error);
-        res.status(500).send("Error during registration");
+        if (error.code === 11000 && error.keyPattern) {
+            res.status(400).send("Registration number or E-mail already exists");
+        } else {
+            console.error(error);
+            res.status(500).send("Error during registration");
+        }
     }
 });
+
 
 app.get("/login", (req, res) => {
     res.render("admin/login")
 })
 
 app.post("/login", async (req, res) => {
+
+
+    if (req.session.user_id) {
+        return res.redirect("/student");
+    }
     const { regno, password } = req.body;
 
-    if (regno === "admin") {
+    if (regno === "admin" && password === "admin") {
         req.session.user_id = regno;
         return res.redirect("/admin");
     }
@@ -195,9 +206,9 @@ app.post("/login", async (req, res) => {
     }
 });
 
-app.post("/logout", (req, res) => {
+app.get("/logout", (req, res) => {
     req.session.destroy();
-    res.redirect("/login")
+    res.redirect("/")
 })
 
 app.put("/admin/experiences/:id", async (req, res) => {
@@ -343,6 +354,9 @@ app.put("/student/edit/:id", async (req, res) => {
         res.status(500).send("Server error");
     }
 });
+
+
+
 
 // UPDATED: Generate PDF function with skills
 async function generatePdf(data, fileName) {

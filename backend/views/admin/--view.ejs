@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Experience Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #6366f1;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #06b6d4;
+            --purple: #a855f7;
+            --pink: #ec4899;
+            --gray-bg: #f8fafc;
+            --white: #ffffff;
+            --gray-50: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-900: #0f172a;
+        }
+
+        body {
+            background: var(--gray-bg);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--gray-900);
+        }
+
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--purple) 100%);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(50%, -50%);
+        }
+
+        .dashboard-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .dashboard-subtitle {
+            opacity: 0.9;
+            margin: 0.5rem 0 0 0;
+            font-size: 1.1rem;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 15px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 20px;
+            padding: 1.8rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--gray-200);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--card-color);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-card.total { --card-color: var(--primary); }
+        .stat-card.pending { --card-color: var(--warning); }
+        .stat-card.accepted { --card-color: var(--success); }
+        .stat-card.denied { --card-color: var(--danger); }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .stat-card.total .stat-icon { background: var(--primary); }
+        .stat-card.pending .stat-icon { background: var(--warning); }
+        .stat-card.accepted .stat-icon { background: var(--success); }
+        .stat-card.denied .stat-icon { background: var(--danger); }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--card-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--gray-600);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .controls-section {
+            background: white;
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .filter-btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 12px;
+            border: 2px solid transparent;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-btn.active {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .filter-btn.all { 
+            background: var(--primary); 
+            color: white; 
+        }
+        .filter-btn.all.active { 
+            background: var(--primary); 
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4); 
+        }
+
+        .filter-btn.pending { 
+            background: var(--warning); 
+            color: white; 
+        }
+        .filter-btn.pending.active { 
+            background: var(--warning); 
+            box-shadow: 0 5px 15px rgba(245, 158, 11, 0.4); 
+        }
+
+        .filter-btn.accepted { 
+            background: var(--success); 
+            color: white; 
+        }
+        .filter-btn.accepted.active { 
+            background: var(--success); 
+            box-shadow: 0 5px 15px rgba(34, 197, 94, 0.4); 
+        }
+
+        .filter-btn.denied { 
+            background: var(--danger); 
+            color: white; 
+        }
+        .filter-btn.denied.active { 
+            background: var(--danger); 
+            box-shadow: 0 5px 15px rgba(239, 68, 68, 0.4); 
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 15px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--gray-50);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+            background: white;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-600);
+            font-size: 1.1rem;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .experience-table {
+            margin: 0;
+        }
+
+        .experience-table thead th {
+            background: var(--gray-50);
+            border: none;
+            padding: 1.2rem;
+            font-weight: 700;
+            color: var(--gray-700);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--gray-200);
+        }
+
+        .experience-table tbody td {
+            padding: 1.2rem;
+            border: none;
+            border-bottom: 1px solid var(--gray-100);
+            vertical-align: middle;
+        }
+
+        .experience-table tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        .experience-table tbody tr:hover {
+            background: var(--gray-50);
+            transform: scale(1.01);
+        }
+
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            margin: 0 0.2rem;
+        }
+
+        .btn-preview {
+            background: var(--info);
+            color: white;
+        }
+
+        .btn-preview:hover {
+            background: #0891b2;
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        .btn-accept {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-accept:hover {
+            background: #16a34a;
+            transform: translateY(-2px);
+        }
+
+        .btn-deny {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-deny:hover {
+            background: #d97706;
+            transform: translateY(-2px);
+        }
+
+        .btn-delete {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+        }
+
+        .type-badge {
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .type-internship {
+            background: linear-gradient(45deg, var(--primary), var(--purple));
+            color: white;
+        }
+
+        .type-project {
+            background: linear-gradient(45deg, var(--success), #10b981);
+            color: white;
+        }
+
+        .type-training {
+            background: linear-gradient(45deg, var(--warning), #f97316);
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--gray-600);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.6;
+            color: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 1rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .filter-buttons {
+                justify-content: center;
+            }
+            
+            .action-btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+            }
+
+            .dashboard-title {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* Status indicators */
+        .status-pending { color: var(--warning); }
+        .status-accepted { color: var(--success); }
+        .status-denied { color: var(--danger); }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <div class="dashboard-header">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h1 class="dashboard-title">
+                        <i class="fas fa-chart-pie"></i>
+                        Experience Dashboard
+                    </h1>
+                    <p class="dashboard-subtitle">Manage and review student experience submissions</p>
+                </div>
+                <form action="/logout" method="POST">
+                    <button type="submit" class="logout-btn">
+                        <i class="fas fa-sign-out-alt me-2"></i>
+                        Logout
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card total">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-number" id="totalCount">15</div>
+                        <div class="stat-label">Total Submissions</div>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-files"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="stat-card pending">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-number" id="pendingCount">8</div>
+                        <div class="stat-label">Pending Review</div>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="stat-card accepted">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-number" id="acceptedCount">5</div>
+                        <div class="stat-label">Accepted</div>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="stat-card denied">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-number" id="deniedCount">2</div>
+                        <div class="stat-label">Denied</div>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls-section">
+            <div class="filter-buttons">
+                <button class="filter-btn all active" data-status="all">
+                    <i class="fas fa-list me-1"></i> All
+                </button>
+                <button class="filter-btn pending" data-status="pending">
+                    <i class="fas fa-clock me-1"></i> Pending
+                </button>
+                <button class="filter-btn accepted" data-status="accepted">
+                    <i class="fas fa-check me-1"></i> Accepted
+                </button>
+                <button class="filter-btn denied" data-status="denied">
+                    <i class="fas fa-times me-1"></i> Denied
+                </button>
+            </div>
+            
+            <div class="search-container">
+                <input type="text" id="searchInput" class="search-input" 
+                       placeholder="Search by registration number, name, email, or company...">
+                <i class="fas fa-search search-icon"></i>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="table-container">
+    <table class="table experience-table">
+        <thead>
+            <tr>
+                <th><i class="fas fa-id-badge me-2"></i>Registration</th>
+                <th><i class="fas fa-user me-2"></i>Student</th>
+                <th><i class="fas fa-envelope me-2"></i>Email</th>
+                <th><i class="fas fa-building me-2"></i>Company</th>
+                <th><i class="fas fa-calendar me-2"></i>Year</th>
+                <th><i class="fas fa-tag me-2"></i>Type</th>
+                <th><i class="fas fa-info-circle me-2"></i>Status</th>
+                <th><i class="fas fa-eye me-2"></i>Preview</th>
+                <th><i class="fas fa-tasks me-2"></i>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="experienceTableBody">
+            <% experienceList.forEach((experience, index) => { %>
+            <tr data-status="<%= experience.status %>">
+                <td><strong><%= experience.registrationId || `REG${String(index + 1).padStart(3, '0')}` %></strong></td>
+                <td><%= experience.studentName %></td>
+                <td class="text-muted"><%= experience.email %></td>
+                <td><%= experience.company %></td>
+                <td><%= experience.year %></td>
+                <td><span class="type-badge type-<%= experience.type.toLowerCase() %>"><%= experience.type %></span></td>
+                <td>
+                    <span class="status-<%= experience.status %>">
+                        <% if (experience.status === 'pending') { %>
+                            <i class="fas fa-clock me-1"></i>Pending
+                        <% } else if (experience.status === 'accepted') { %>
+                            <i class="fas fa-check-circle me-1"></i>Accepted
+                        <% } else if (experience.status === 'denied') { %>
+                            <i class="fas fa-times-circle me-1"></i>Denied
+                        <% } %>
+                    </span>
+                </td>
+                <td>
+                    <a href="#" class="action-btn btn-preview" data-id="<%= experience._id %>">
+                        <i class="fas fa-external-link-alt"></i> View
+                    </a>
+                </td>
+                <td>
+                    <div class="d-flex">
+                        <button class="action-btn btn-accept" data-id="<%= experience._id %>">
+                            <i class="fas fa-check"></i>
+                        </button>
+                        <button class="action-btn btn-deny" data-id="<%= experience._id %>">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <button class="action-btn btn-delete" data-id="<%= experience._id %>">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            <% }); %>
+        </tbody>
+    </table>
+</div>
+    </div>
+
+    <script>
+    
+        const allExperiences =  JSON.stringify(experienceList || []) ;
+    
+        // Sample data - replace with your actual data
+        /*const allExperiences = [
+            {
+                _id: '1',
+                regno: 'REG001',
+                name: 'John Doe',
+                email: 'john.doe@email.com',
+                company: 'Tech Corp',
+                year: '2024',
+                type: 'Internship',
+                status: 'pending',
+                readLink: '#'
+            },
+            {
+                _id: '2',
+                regno: 'REG002',
+                name: 'Jane Smith',
+                email: 'jane.smith@email.com',
+                company: 'StartUp Inc',
+                year: '2024',
+                type: 'Project',
+                status: 'accepted',
+                readLink: '#'
+            },
+            {
+                _id: '3',
+                regno: 'REG003',
+                name: 'Mike Johnson',
+                email: 'mike.johnson@email.com',
+                company: 'Enterprise Solutions',
+                year: '2024',
+                type: 'Training',
+                status: 'denied',
+                readLink: '#'
+            }
+        ];
+*/
+        const tableBody = document.getElementById("experienceTableBody");
+        const searchInput = document.getElementById("searchInput");
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        
+        let currentFilter = 'all';
+
+        // Filter functionality
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Update active button
+                filterButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                currentFilter = btn.dataset.status;
+                filterAndSearch();
+            });
+        });
+
+        // Search functionality
+        searchInput.addEventListener("input", filterAndSearch);
+
+        function filterAndSearch() {
+            const keyword = searchInput.value.trim().toLowerCase();
+            
+            let filtered = allExperiences;
+            
+            // Apply status filter
+            if (currentFilter !== 'all') {
+                filtered = filtered.filter(exp => {
+                    const status = exp.status || 'pending';
+                    return status === currentFilter;
+                });
+            }
+            
+            // Apply search filter
+            if (keyword) {
+                filtered = filtered.filter(item =>
+                    item.regno.toLowerCase().includes(keyword) ||
+                    item.name.toLowerCase().includes(keyword) ||
+                    item.email.toLowerCase().includes(keyword) ||
+                    item.company.toLowerCase().includes(keyword)
+                );
+            }
+
+            renderTable(filtered);
+            updateStats();
+        }
+
+        function renderTable(experiences) {
+            if (experiences.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="9" class="empty-state">
+                            <i class="fas fa-search"></i>
+                            <h5>No Results Found</h5>
+                            <p class="mb-0">No experiences match your current filters.</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tableBody.innerHTML = experiences.map(experience => {
+                const status = experience.status || 'pending';
+                const statusIcon = {
+                    'pending': 'fas fa-clock',
+                    'accepted': 'fas fa-check-circle',
+                    'denied': 'fas fa-times-circle'
+                };
+                
+                return `
+                    <tr data-status="${status}">
+                        <td><strong>${experience.regno}</strong></td>
+                        <td>${experience.name}</td>
+                        <td class="text-muted">${experience.email}</td>
+                        <td>${experience.company}</td>
+                        <td>${experience.year}</td>
+                        <td>
+                            <span class="type-badge type-${experience.type.toLowerCase()}">
+                                ${experience.type}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="status-${status}">
+                                <i class="${statusIcon[status]} me-1"></i>
+                                ${status.charAt(0).toUpperCase() + status.slice(1)}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="${experience.readLink}" target="_blank" class="action-btn btn-preview">
+                                <i class="fas fa-external-link-alt"></i> View
+                            </a>
+                        </td>
+                        <td>
+                            <div class="d-flex">
+                                <button class="action-btn btn-accept" onclick="updateStatus('${experience._id}', 'accepted')">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button class="action-btn btn-deny" onclick="updateStatus('${experience._id}', 'denied')">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                                <button class="action-btn btn-delete" onclick="deleteExperience('${experience._id}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function updateStats() {
+            const total = allExperiences.length;
+            const pending = allExperiences.filter(exp => !exp.status || exp.status === 'pending').length;
+            const accepted = allExperiences.filter(exp => exp.status === 'accepted').length;
+            const denied = allExperiences.filter(exp => exp.status === 'denied').length;
+
+            document.getElementById('totalCount').textContent = total;
+            document.getElementById('pendingCount').textContent = pending;
+            document.getElementById('acceptedCount').textContent = accepted;
+            document.getElementById('deniedCount').textContent = denied;
+        }
+
+        function updateStatus(id, status) {
+            const actions = {
+                'accepted': 'Accept this experience submission?',
+                'denied': 'Deny this experience submission?'
+            };
+            
+            if (confirm(actions[status])) {
+                // Update local data
+                const exp = allExperiences.find(e => e._id === id);
+                if (exp) {
+                    exp.status = status;
+                    filterAndSearch();
+                }
+                
+                // Here you would make an API call to update the backend
+                console.log(`Updating experience ${id} to ${status}`);
+            }
+        }
+
+        function deleteExperience(id) {
+            if (confirm('Permanently delete this experience submission?\n\nThis action cannot be undone.')) {
+                // Remove from local data
+                const index = allExperiences.findIndex(e => e._id === id);
+                if (index > -1) {
+                    allExperiences.splice(index, 1);
+                    filterAndSearch();
+                }
+                
+                // Here you would make an API call to delete from backend
+                console.log(`Deleting experience ${id}`);
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTable(allExperiences);
+            updateStats();
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

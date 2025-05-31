@@ -1,0 +1,88 @@
+<nav class="custom-navbar">
+  <div class="nav-logo">PrepNPlace</div>
+  <div class="nav-toggle" onclick="toggleMenu()">☰</div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="/">Home</a></li>
+    <li><a href="/student">DashBoard</a></li>
+    <li><a href="/new">Add</a></li>
+  </ul>
+</nav>
+
+<style>
+:root {
+  --primary-color: #2563eb;
+  --primary-light: #3b82f6;
+}
+
+.custom-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+  padding: 1rem 2rem;
+  color: white;
+}
+
+.nav-logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.nav-toggle {
+  display: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links li a {
+  text-decoration: none;
+  color: white;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.nav-links li a:hover {
+  color: #dbeafe;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .nav-toggle {
+    display: block;
+  }
+
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    padding: 1rem 2rem;
+  }
+
+  .nav-links.show {
+    display: flex;
+  }
+}
+</style>
+
+<script>
+function toggleMenu() {
+  document.getElementById("navLinks").classList.toggle("show");
+}
+</script>
