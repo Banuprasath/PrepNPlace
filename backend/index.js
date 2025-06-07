@@ -2,12 +2,11 @@ const express = require("express");
 const app = express();
 const methodOverride = require("method-override");
 const cors = require('cors');
-const env = require('dotenv').config();
+require('dotenv').config();
 
 const mongoose = require("mongoose");
 const Experiences = require("./models/experiences");
 const users = require("./models/users");
-const DB_URL = process.env.MONGO_URI;
 const bcrypt = require("bcrypt");
 
 const session = require("express-session");
@@ -20,54 +19,73 @@ const { PDFDocument, StandardFonts } = require("pdf-lib");
 const crypto = require("crypto");
 const experienceModel = require("./models/experiences");
 
-// Basic middleware
+const DB_URL = process.env.MONGO_URI;
+
+if (!DB_URL) {
+    console.error('Error: MONGO_URI environment variable is required');
+    process.exit(1);
+}
+
+console.log('MongoDB URI found:', DB_URL ? 'Yes' : 'No');
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(methodOverride('_method'));
-app.use(cors()); // Enable CORS if needed
+app.use(cors());
 
-// Database connection
-mongoose.connect(DB_URL);
+const mongooseOptions = {
+    serverSelectionTimeoutMS: 30000,
+    socketTimeoutMS: 45000,
+    maxPoolSize: 10,
+    dbName: 'PrepNPlace'
+};
+
+const url = "mongodb+srv://banuprasathsaravanan:8HIKAP8XTVKXIAGh@cluster0.xzx2gvj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster08HIKAP8XTVKXIAGh";
+
+mongoose.connect(DB_URL, mongooseOptions)
+    .then(() => console.log("Database Connected Successfully"))
+    .catch(err => {
+        console.error("Database connection error:", err);
+        process.exit(1);
+    });
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error :"));
-db.once("open", () => {
-  console.log("Database Connected");
-});
 
-// Session store configuration
 const store = MongoStore.create({
     mongoUrl: DB_URL,
     crypto: {
-        secret: process.env.SESSION_SECRET || "blackburn" // Use env variable for security
+        secret: process.env.SESSION_SECRET || "blackburn"
     },
-    touchAfter: 24 * 60 * 60 // time period in seconds
+    touchAfter: 24 * 60 * 60
 });
 
-// Single error handler for store
 store.on("error", function (e) {
     console.log("Session store error:", e);
 });
 
-// Session middleware (only once!)
 app.use(session({
-    secret: process.env.SESSION_SECRET || "blackburn", // Use same secret as store
+    secret: process.env.SESSION_SECRET || "blackburn",
     resave: false,
     saveUninitialized: false,
     store: store,
     cookie: {
-        maxAge: 1000 * 60 * 60 * 24, // 1 day
-        secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
-        httpOnly: true // Prevent XSS attacks
+        maxAge: 1000 * 60 * 60 * 24,
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: true
     }
 }));
 
+app.set("view engine", "ejs");
 
-const port = 3000;
-app.listen(port,'0.0.0.0', () => {
-    console.log("Server running on Port 3000");
+const port = process.env.PORT || 3000;
+app.listen(port, '0.0.0.0', () => {
+    console.log(`Server running on Port ${port}`);
 });
+
+
+
 
 app.set("view engine", "ejs");
 app.use(cors());
@@ -107,7 +125,7 @@ app.get("/", async (req, res) => {
         currentSkill: skill || '',
         currentCompany: company || '',
         userStatus:  req.session.user_id
-        // <-- Pass user to EJS
+      
     });
 });
 

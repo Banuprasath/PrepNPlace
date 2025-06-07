@@ -8,3 +8,5 @@
 .env
 
 /dist
+
+ ../front-end/src/module/student/index.tsx
