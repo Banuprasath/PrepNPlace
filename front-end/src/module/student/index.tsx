@@ -1,10 +1,15 @@
 import CheckComponent from "@/checkComponent";
+import { useEffect } from "react";
 // type Student = {
 //     name: string;
 //     userRole: string;
 //     companyName: string;
 //     academicYear: string;
 //   };
+
+
+
+
 
 const student = [
     {
@@ -41,6 +46,13 @@ const student = [
 
 
 export default function StudentLayout() {
+
+    useEffect(() => {
+        fetch("http://localhost:3000/")
+          .then((res) => res.json())
+          .then((data) => console.log(data))
+          .catch((err) => console.log(err));
+      }, []);
     return (
         <>
         <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-4 p-4">
