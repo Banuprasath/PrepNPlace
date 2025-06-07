@@ -1,11 +1,10 @@
-# Ignore node modules
+
 /node_modules
 
-# Ignore uploaded files
+
 /uploads
 
-# Ignore env files
+
 .env
 
-# Ignore build files
 /dist
