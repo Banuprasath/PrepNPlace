@@ -13,7 +13,6 @@ const session = require("express-session");
 const MongoStore = require('connect-mongo');
 const path = require("path");
 const fs = require("fs");
-const generateHashedFileName = require("./utils/pdfGenerate")
 const { PDFDocument, StandardFonts } = require("pdf-lib");
 
 const crypto = require("crypto");
@@ -40,8 +39,6 @@ const mongooseOptions = {
     maxPoolSize: 10,
     dbName: 'PrepNPlace'
 };
-
-const url = "mongodb+srv://banuprasathsaravanan:8HIKAP8XTVKXIAGh@cluster0.xzx2gvj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster08HIKAP8XTVKXIAGh";
 
 mongoose.connect(DB_URL, mongooseOptions)
     .then(() => console.log("Database Connected Successfully"))
@@ -84,17 +81,14 @@ app.listen(port, '0.0.0.0', () => {
     console.log(`Server running on Port ${port}`);
 });
 
-
-
-
 app.set("view engine", "ejs");
 app.use(cors());
 
 // Home page with search functionality
 app.get("/", async (req, res) => {
     const { search, skill, company } = req.query;
-  //  let query = { visibility: { $ne: "None" } };
-      let query ={visibility :{ $ne: "None"}};
+    let query = { visibility: { $ne: "None" } };
+    
     if (search) {
         query.$or = [
             { name: { $regex: search, $options: 'i' } },
@@ -115,8 +109,6 @@ app.get("/", async (req, res) => {
     const allSkills = await Experiences.distinct('skills');
     const allCompanies = await Experiences.distinct('company');
 
-    const user = "student"; // <-- Get user from session
-
     res.render("experience", { 
         experiences2, 
         allSkills, 
@@ -124,12 +116,11 @@ app.get("/", async (req, res) => {
         currentSearch: search || '',
         currentSkill: skill || '',
         currentCompany: company || '',
-        userStatus:  req.session.user_id
-      
+        userStatus: req.session.user_id
     });
 });
 
-// NEW: Read-only experience view
+// Read-only experience view
 app.get("/experience/:id", async (req, res) => {
     const { id } = req.params;
     try {
@@ -144,7 +135,7 @@ app.get("/experience/:id", async (req, res) => {
     }
 });
 
-// NEW: PDF download endpoint
+// UPDATED: PDF download endpoint - generate PDF in memory
 app.get("/experience/:id/download", async (req, res) => {
     const { id } = req.params;
     try {
@@ -153,25 +144,24 @@ app.get("/experience/:id/download", async (req, res) => {
             return res.status(404).send("Experience not found");
         }
         
-        const fileName = `experience_${id}.pdf`;
-        const filePath = await generatePdf(experience, fileName);
+        // Generate PDF in memory instead of saving to disk
+        const pdfBytes = await generatePdfBytes(experience);
         
-        res.download(filePath, `${experience.name}_${experience.company}_Experience.pdf`, (err) => {
-            if (err) {
-                console.error("Download error:", err);
-            }
-            // Optionally delete the temporary file
-            fs.unlink(filePath, (unlinkErr) => {
-                if (unlinkErr) console.error("Error deleting temp file:", unlinkErr);
-            });
-        });
+        // Set headers for PDF download
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename="${experience.name}_${experience.company}_Experience.pdf"`);
+        res.setHeader('Content-Length', pdfBytes.length);
+        
+        // Send PDF directly from memory
+        res.send(Buffer.from(pdfBytes));
+        
     } catch (err) {
         console.error("Error generating PDF:", err);
         res.status(500).send("Error generating PDF");
     }
 });
 
-// Updated: New experience form - only for logged-in users
+// New experience form - only for logged-in users
 app.get("/new", (req, res) => {
     if (!req.session.user_id) {
         return res.redirect("/login");
@@ -186,20 +176,19 @@ app.get("/new", (req, res) => {
     });
 });
 
-
 // Admin routes
 app.get("/admin", async (req, res) => {
     if (req.session.user_id) {
         const experienceList = await Experiences.find();
         res.render("admin/view", { experienceList });
     } else {
-        res.send("You Naughty Boy login first!!!!!")
+        res.redirect("/login")
     }
-})
+});
 
 app.get("/register", (req, res) => {
     res.render("admin/register")
-})
+});
 
 app.post("/register", async (req, res) => {
     try {
@@ -223,25 +212,22 @@ app.post("/register", async (req, res) => {
     }
 });
 
-
 app.get("/login", (req, res) => {
     res.render("admin/login")
-})
+});
 
 app.post("/login", async (req, res) => {
-     const { regno, password } = req.body;
+    const { regno, password } = req.body;
 
     if (regno === "admin" && password === "admin") {
         req.session.user_id = regno;
         return res.redirect("/admin");
     }
+    
     if (req.session.user_id) {
         console.log("User logged in:", req.session);
         return res.redirect("/student");
     }
-   
-
-    
 
     const user = await users.findOne({ regno });
 
@@ -263,7 +249,7 @@ app.post("/login", async (req, res) => {
 app.get("/logout", (req, res) => {
     req.session.destroy();
     res.redirect("/")
-})
+});
 
 app.put("/admin/experiences/:id", async (req, res) => {
     const { id } = req.params;
@@ -311,7 +297,7 @@ app.delete("/admin/experiences/:id", async (req, res) => {
     }
 });
 
-// UPDATED: Add experience - with authentication check and auto-fill
+// UPDATED: Add experience - removed PDF generation
 app.post("/experiences/add", async (req, res) => {
     if (!req.session.user_id) {
         return res.status(401).send("Please login to add experience");
@@ -328,9 +314,7 @@ app.post("/experiences/add", async (req, res) => {
                 .filter(skill => skill.length > 0);
         }
 
-        const fileName = generateHashedFileName(newExperience.regno);
-        const filePath = await generatePdf(newExperience, fileName);
-        newExperience.readLink = `/uploads/${fileName}`;
+        // Remove PDF generation - just set visibility
         newExperience.visibility = "None";
 
         const experienceEntry = new Experiences(newExperience);
@@ -349,9 +333,9 @@ app.get("/student", async (req, res) => {
         const experienceList = await Experiences.find({regno: regNo});
         res.render("student/sview", { experienceList });
     } else {
-        res.send("You Naughty Boy login first!!!!!")
+        res.redirect("/login")
     }
-})
+});
 
 app.get("/edit/:id", async (req, res) => {
     const { id } = req.params;
@@ -371,6 +355,7 @@ app.get("/edit/:id", async (req, res) => {
     }
 });
 
+// UPDATED: Edit experience - removed PDF generation
 app.put("/student/edit/:id", async (req, res) => {
     const { id } = req.params;
     const { regno } = req.body;
@@ -394,12 +379,6 @@ app.put("/student/edit/:id", async (req, res) => {
             return res.status(404).send("User not found");
         }
 
-        const fileName = generateHashedFileName(regno);
-        const filePath = await generatePdf(updatedUser, fileName);
-
-        updatedUser.readLink = `/uploads/${fileName}`;
-        await updatedUser.save();
-
         const experienceList = await Experiences.find({ regno: regno });
         res.render("student/sview", { experienceList });
 
@@ -409,11 +388,8 @@ app.put("/student/edit/:id", async (req, res) => {
     }
 });
 
-
-
-
-// UPDATED: Generate PDF function with skills
-async function generatePdf(data, fileName) {
+// UPDATED: PDF generation function - returns bytes instead of file path
+async function generatePdfBytes(data) {
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage([595.276, 841.890]);
 
@@ -454,6 +430,7 @@ async function generatePdf(data, fileName) {
         y -= 25;
     }
 
+    // Add content to PDF
     drawLabelAndValue("Candidate Name:", data.name);
     drawLabelAndValue("Email:", data.email);
     drawLabelAndValue("Registration Number:", data.regno);
@@ -462,7 +439,6 @@ async function generatePdf(data, fileName) {
     drawLabelAndValue("Graduation Year:", data.year);
     drawLabelAndValue("Position Type:", data.type);
     
-    // NEW: Display skills
     if (data.skills && data.skills.length > 0) {
         drawLabelAndValue("Skills Used:", data.skills.join(', '));
     }
@@ -479,9 +455,38 @@ async function generatePdf(data, fileName) {
         drawLabelAndValue("Additional Insights:", data.bonus);
     }
 
-    const pdfBytes = await pdfDoc.save();
-    const filePath = path.join(__dirname, "uploads", fileName);
-    fs.writeFileSync(filePath, pdfBytes);
-
-    return filePath;
+    // Return PDF bytes instead of saving to file
+    return await pdfDoc.save();
 }
+
+// Optional: Admin cleanup route to remove existing PDF files and readLink references
+app.get("/admin/cleanup-pdfs", async (req, res) => {
+    if (req.session.user_id !== "admin") {
+        return res.status(403).send("Admin access required");
+    }
+    
+    try {
+        const uploadsDir = path.join(__dirname, 'uploads');
+        let deletedCount = 0;
+        
+        // Check if uploads directory exists
+        if (fs.existsSync(uploadsDir)) {
+            const files = fs.readdirSync(uploadsDir);
+            
+            files.forEach(file => {
+                if (file.endsWith('.pdf')) {
+                    fs.unlinkSync(path.join(uploadsDir, file));
+                    deletedCount++;
+                }
+            });
+        }
+        
+        // Remove readLink field from all experiences
+        await Experiences.updateMany({}, { $unset: { readLink: "" } });
+        
+        res.send(`Cleanup completed! Deleted ${deletedCount} PDF files and removed readLink references from database.`);
+    } catch (err) {
+        console.error("Cleanup error:", err);
+        res.status(500).send("Error during cleanup: " + err.message);
+    }
+});
