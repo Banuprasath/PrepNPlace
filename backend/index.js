@@ -2,13 +2,16 @@ const express = require("express");
 const app = express();
 const methodOverride = require("method-override");
 const cors = require('cors');
+const env = require('dotenv').config();
 
 const mongoose = require("mongoose");
 const Experiences = require("./models/experiences");
 const users = require("./models/users");
+const DB_URL = process.env.MONGO_URI;
 const bcrypt = require("bcrypt");
 
-const session = require("express-session")
+const session = require("express-session");
+const MongoStore = require('connect-mongo');
 const path = require("path");
 const fs = require("fs");
 const generateHashedFileName = require("./utils/pdfGenerate")
@@ -17,13 +20,15 @@ const { PDFDocument, StandardFonts } = require("pdf-lib");
 const crypto = require("crypto");
 const experienceModel = require("./models/experiences");
 
+// Basic middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-mongoose.connect("mongodb://localhost:27017/PrepNPlace");
-
 app.use(methodOverride('_method'));
-app.use(session({secret:"secret"}))
+app.use(cors()); // Enable CORS if needed
+
+// Database connection
+mongoose.connect(DB_URL);
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error :"));
@@ -31,7 +36,36 @@ db.once("open", () => {
   console.log("Database Connected");
 });
 
-app.listen(3000,'0.0.0.0', () => {
+// Session store configuration
+const store = MongoStore.create({
+    mongoUrl: DB_URL,
+    crypto: {
+        secret: process.env.SESSION_SECRET || "blackburn" // Use env variable for security
+    },
+    touchAfter: 24 * 60 * 60 // time period in seconds
+});
+
+// Single error handler for store
+store.on("error", function (e) {
+    console.log("Session store error:", e);
+});
+
+// Session middleware (only once!)
+app.use(session({
+    secret: process.env.SESSION_SECRET || "blackburn", // Use same secret as store
+    resave: false,
+    saveUninitialized: false,
+    store: store,
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24, // 1 day
+        secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+        httpOnly: true // Prevent XSS attacks
+    }
+}));
+
+
+const port = 3000;
+app.listen(port,'0.0.0.0', () => {
     console.log("Server running on Port 3000");
 });
 
@@ -177,17 +211,19 @@ app.get("/login", (req, res) => {
 })
 
 app.post("/login", async (req, res) => {
-
-
-    if (req.session.user_id) {
-        return res.redirect("/student");
-    }
-    const { regno, password } = req.body;
+     const { regno, password } = req.body;
 
     if (regno === "admin" && password === "admin") {
         req.session.user_id = regno;
         return res.redirect("/admin");
     }
+    if (req.session.user_id) {
+        console.log("User logged in:", req.session);
+        return res.redirect("/student");
+    }
+   
+
+    
 
     const user = await users.findOne({ regno });
 
