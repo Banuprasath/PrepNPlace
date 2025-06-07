@@ -26,12 +26,20 @@ if (!DB_URL) {
 }
 
 console.log('MongoDB URI found:', DB_URL ? 'Yes' : 'No');
+console.log('Environment:', process.env.NODE_ENV);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(methodOverride('_method'));
-app.use(cors());
+
+// Updated CORS configuration
+app.use(cors({
+    origin: process.env.FRONTEND_URL || true,
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 const mongooseOptions = {
     serverSelectionTimeoutMS: 30000,
@@ -62,6 +70,7 @@ store.on("error", function (e) {
     console.log("Session store error:", e);
 });
 
+// Updated session configuration
 app.use(session({
     secret: process.env.SESSION_SECRET || "blackburn",
     resave: false,
@@ -69,10 +78,19 @@ app.use(session({
     store: store,
     cookie: {
         maxAge: 1000 * 60 * 60 * 24,
-        secure: process.env.NODE_ENV === 'production',
-        httpOnly: true
-    }
+        secure: false, // Temporarily set to false for debugging
+        httpOnly: true,
+        sameSite: 'lax'
+    },
+    name: 'sessionId' // Give session a specific name
 }));
+
+// Add session debugging middleware
+app.use((req, res, next) => {
+    console.log('Session ID:', req.sessionID);
+    console.log('Session data:', req.session);
+    next();
+});
 
 app.set("view engine", "ejs");
 
@@ -80,9 +98,6 @@ const port = process.env.PORT || 3000;
 app.listen(port, '0.0.0.0', () => {
     console.log(`Server running on Port ${port}`);
 });
-
-app.set("view engine", "ejs");
-app.use(cors());
 
 // Home page with search functionality
 app.get("/", async (req, res) => {
@@ -163,6 +178,7 @@ app.get("/experience/:id/download", async (req, res) => {
 
 // New experience form - only for logged-in users
 app.get("/new", (req, res) => {
+    console.log("New experience page - Session user_id:", req.session.user_id);
     if (!req.session.user_id) {
         return res.redirect("/login");
     }
@@ -178,6 +194,7 @@ app.get("/new", (req, res) => {
 
 // Admin routes
 app.get("/admin", async (req, res) => {
+    console.log("Admin page - Session user_id:", req.session.user_id);
     if (req.session.user_id) {
         const experienceList = await Experiences.find();
         res.render("admin/view", { experienceList });
@@ -195,60 +212,135 @@ app.post("/register", async (req, res) => {
         let newUser = req.body;
         const password = newUser.password;
 
+        console.log("Registering user:", newUser.regno);
+        console.log("Password length:", password.length);
+
         const hash = await bcrypt.hash(password, 10);
         newUser.password = hash;
+
+        console.log("Generated hash:", hash);
+        console.log("Hash length:", hash.length);
 
         const user = new users(newUser);
         await user.save();
 
+        console.log("User saved successfully");
         res.status(201).render("admin/login");
     } catch (error) {
+        console.error("Registration error:", error);
         if (error.code === 11000 && error.keyPattern) {
             res.status(400).send("Registration number or E-mail already exists");
         } else {
-            console.error(error);
             res.status(500).send("Error during registration");
         }
     }
 });
 
 app.get("/login", (req, res) => {
+    console.log("Login page accessed - Current session:", req.session.user_id);
     res.render("admin/login")
 });
 
+// Enhanced login route with extensive debugging
 app.post("/login", async (req, res) => {
+    console.log("=== LOGIN ATTEMPT START ===");
+    console.log("Request body:", req.body);
+    console.log("Session before login:", req.session);
+    console.log("Session ID:", req.sessionID);
+    
     const { regno, password } = req.body;
 
+    console.log("Login attempt for regno:", regno);
+    console.log("Password provided:", password ? "Yes" : "No");
+    console.log("Password length:", password ? password.length : 0);
+
+    // Admin login check
     if (regno === "admin" && password === "admin") {
+        console.log("Admin login detected");
         req.session.user_id = regno;
+        console.log("Session after admin login:", req.session);
         return res.redirect("/admin");
     }
     
+    // Check if already logged in
     if (req.session.user_id) {
-        console.log("User logged in:", req.session);
+        console.log("User already logged in:", req.session.user_id);
         return res.redirect("/student");
     }
 
-    const user = await users.findOne({ regno });
+    try {
+        console.log("Searching for user with regno:", regno);
+        const user = await users.findOne({ regno });
+        console.log("User found:", user ? "Yes" : "No");
+        
+        if (!user) {
+            console.log("User not found in database");
+            return res.status(404).send("User Not Found");
+        }
 
-    if (!user) {
-        return res.status(404).send("User Not Found");
-    }
+        console.log("User details:", {
+            regno: user.regno,
+            name: user.name,
+            email: user.email,
+            hasPassword: !!user.password,
+            passwordLength: user.password ? user.password.length : 0
+        });
 
-    const validPassword = await bcrypt.compare(password, user.password);
-    if (validPassword) {
-        req.session.user_id = user.regno;
-        req.session.user_name = user.name;
-        req.session.user_email = user.email;
-        return res.redirect("/student");
-    } else {
-        return res.status(401).send("Invalid Credentials");
+        // Extensive password debugging
+        console.log("=== PASSWORD COMPARISON DEBUG ===");
+        console.log("Stored password hash:", user.password);
+        console.log("Input password:", password);
+        
+        // Test bcrypt functionality
+        try {
+            const testHash = await bcrypt.hash(password, 10);
+            console.log("Fresh hash of input password:", testHash);
+            const testCompare = await bcrypt.compare(password, testHash);
+            console.log("Fresh hash comparison test:", testCompare);
+        } catch (bcryptError) {
+            console.error("Bcrypt test error:", bcryptError);
+        }
+        
+        // Main password comparison
+        const validPassword = await bcrypt.compare(password, user.password);
+        console.log("Password comparison result:", validPassword);
+        
+        if (validPassword) {
+            console.log("Password valid - setting session");
+            req.session.user_id = user.regno;
+            req.session.user_name = user.name;
+            req.session.user_email = user.email;
+            
+            // Save session explicitly
+            req.session.save((err) => {
+                if (err) {
+                    console.error("Session save error:", err);
+                    return res.status(500).send("Session save error");
+                }
+                console.log("Session saved successfully:", req.session);
+                console.log("=== LOGIN ATTEMPT END - SUCCESS ===");
+                return res.redirect("/student");
+            });
+        } else {
+            console.log("Password invalid");
+            console.log("=== LOGIN ATTEMPT END - INVALID PASSWORD ===");
+            return res.status(401).send("Invalid Credentials");
+        }
+    } catch (error) {
+        console.error("Login error:", error);
+        console.log("=== LOGIN ATTEMPT END - ERROR ===");
+        return res.status(500).send("Server error during login");
     }
 });
 
 app.get("/logout", (req, res) => {
-    req.session.destroy();
-    res.redirect("/")
+    console.log("Logout - destroying session for user:", req.session.user_id);
+    req.session.destroy((err) => {
+        if (err) {
+            console.error("Session destroy error:", err);
+        }
+        res.redirect("/");
+    });
 });
 
 app.put("/admin/experiences/:id", async (req, res) => {
@@ -299,6 +391,7 @@ app.delete("/admin/experiences/:id", async (req, res) => {
 
 // UPDATED: Add experience - removed PDF generation
 app.post("/experiences/add", async (req, res) => {
+    console.log("Add experience - Session user_id:", req.session.user_id);
     if (!req.session.user_id) {
         return res.status(401).send("Please login to add experience");
     }
@@ -328,6 +421,7 @@ app.post("/experiences/add", async (req, res) => {
 });
 
 app.get("/student", async (req, res) => {
+    console.log("Student page - Session user_id:", req.session.user_id);
     if (req.session.user_id) {
         const regNo = req.session.user_id;
         const experienceList = await Experiences.find({regno: regNo});
@@ -386,6 +480,16 @@ app.put("/student/edit/:id", async (req, res) => {
         console.log(err)
         res.status(500).send("Server error");
     }
+});
+
+// Debug route to test session
+app.get("/debug-session", (req, res) => {
+    res.json({
+        sessionID: req.sessionID,
+        session: req.session,
+        cookies: req.headers.cookie,
+        user_id: req.session.user_id
+    });
 });
 
 // UPDATED: PDF generation function - returns bytes instead of file path
