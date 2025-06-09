@@ -630,7 +630,10 @@
   </a>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  
   <script>
+    /*
     // Get all experiences data
     const experiences = Array.from(document.querySelectorAll('.experience-card')).map(card => ({
       element: card,
@@ -749,6 +752,150 @@
     // Initialize
     updateStats();
     populateFilters();
+    */
+  </script>
+
+  <script>
+    // Get all experiences data
+const experiences = Array.from(document.querySelectorAll('.experience-card')).map(card => ({
+  element: card,
+  company: card.dataset.company,
+  year: card.dataset.year,
+  type: card.dataset.type,
+  domain: card.dataset.domain,
+  name: card.dataset.name
+}));
+
+// Update stats
+const updateStats = () => {
+  const totalExperiences = experiences.length;
+  const uniqueCompanies = [...new Set(experiences.map(exp => exp.company))].length;
+
+  document.getElementById('totalExperiences').textContent = totalExperiences;
+  document.getElementById('totalCompanies').textContent = uniqueCompanies;
+};
+
+// Function to normalize strings (removes extra spaces, converts to lowercase)
+const normalizeString = (str) => {
+  return str.trim().toLowerCase().replace(/\s+/g, ' ');
+};
+
+// Populate filter options
+const populateFilters = () => {
+  // Create normalized sets to avoid duplicates
+  const companiesSet = new Set();
+  const yearsSet = new Set();
+  const domainsSet = new Set();
+  
+  experiences.forEach(exp => {
+    companiesSet.add(exp.company.trim());
+    yearsSet.add(exp.year);
+    domainsSet.add(exp.domain.trim());
+  });
+
+  // Convert to sorted arrays
+  const companies = Array.from(companiesSet).sort();
+  const years = Array.from(yearsSet).sort((a, b) => b - a);
+  const domains = Array.from(domainsSet).sort();
+
+  const companySelect = document.getElementById('companyFilter');
+  const yearSelect = document.getElementById('yearFilter');
+  const domainSelect = document.getElementById('domainFilter');
+
+  // Clear existing options (except the first "All" option)
+  companySelect.innerHTML = '<option value="">All Companies</option>';
+  yearSelect.innerHTML = '<option value="">All Years</option>';
+  domainSelect.innerHTML = '<option value="">All Domains</option>';
+
+  companies.forEach(company => {
+    const option = document.createElement('option');
+    option.value = company;
+    option.textContent = company;
+    companySelect.appendChild(option);
+  });
+
+  years.forEach(year => {
+    const option = document.createElement('option');
+    option.value = year;
+    option.textContent = year;
+    yearSelect.appendChild(option);
+  });
+
+  domains.forEach(domain => {
+    const option = document.createElement('option');
+    option.value = domain;
+    option.textContent = domain;
+    domainSelect.appendChild(option);
+  });
+};
+
+// Filter experiences
+const filterExperiences = () => {
+  const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+  const companyFilter = document.getElementById('companyFilter').value;
+  const yearFilter = document.getElementById('yearFilter').value;
+  const typeFilter = document.getElementById('typeFilter').value;
+  const domainFilter = document.getElementById('domainFilter').value;
+
+  let visibleCount = 0;
+
+  experiences.forEach(exp => {
+    const matchesSearch = !searchTerm ||
+      exp.name.toLowerCase().includes(searchTerm) ||
+      exp.company.toLowerCase().includes(searchTerm) ||
+      exp.domain.toLowerCase().includes(searchTerm);
+
+    const matchesCompany = !companyFilter || exp.company.trim() === companyFilter;
+    const matchesYear = !yearFilter || exp.year === yearFilter;
+    const matchesType = !typeFilter || exp.type === typeFilter;
+    const matchesDomain = !domainFilter || exp.domain.trim() === domainFilter;
+
+    const shouldShow = matchesSearch && matchesCompany && matchesYear && matchesType && matchesDomain;
+
+    if (shouldShow) {
+      exp.element.style.display = 'block';
+      visibleCount++;
+    } else {
+      exp.element.style.display = 'none';
+    }
+  });
+
+  // Show/hide no results message
+  const noResults = document.getElementById('noResults');
+  if (visibleCount === 0) {
+    noResults.style.display = 'block';
+  } else {
+    noResults.style.display = 'none';
+  }
+};
+
+// Clear all filters
+const clearFilters = () => {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('companyFilter').value = '';
+  document.getElementById('yearFilter').value = '';
+  document.getElementById('typeFilter').value = '';
+  document.getElementById('domainFilter').value = '';
+  filterExperiences();
+};
+
+// Event listeners
+document.getElementById('searchInput').addEventListener('input', filterExperiences);
+document.getElementById('companyFilter').addEventListener('change', filterExperiences);
+document.getElementById('yearFilter').addEventListener('change', filterExperiences);
+document.getElementById('typeFilter').addEventListener('change', filterExperiences);
+document.getElementById('domainFilter').addEventListener('change', filterExperiences);
+document.getElementById('clearFilters').addEventListener('click', clearFilters);
+
+// Show details function (placeholder)
+const showDetails = (id) => {
+  // You can implement a modal or redirect to detail page
+  console.log('Show details for:', id);
+};
+
+// Initialize
+updateStats();
+populateFilters();
   </script>
 </body>
 
