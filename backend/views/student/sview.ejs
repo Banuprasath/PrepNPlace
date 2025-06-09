@@ -221,6 +221,580 @@
                 font-size: 11px;
             }
         }
+
+
+        /*Mobile Screen */
+        /* Mobile-first responsive design */
+/* Mobile-first responsive design - Updated with fixes */
+@media (max-width: 991px) {
+    .main-container {
+        margin: 10px;
+        padding: 15px;
+        border-radius: 8px;
+    }
+    
+    .page-title {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+    
+    .search-container {
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .header-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .header-actions > div {
+        width: 100%;
+    }
+    
+    .btn-custom {
+        width: 100%;
+        justify-content: center;
+        padding: 10px 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Hide the default table on mobile */
+    .table-container {
+        display: none !important;
+    }
+    
+    /* Create card-based layout for mobile */
+    .mobile-card-container {
+        display: block !important;
+    }
+    
+    /* Fix welcome text styling */
+    .header-actions .d-flex.align-items-center h4 {
+        text-align: center;
+        width: 100%;
+        margin: 0;
+        padding: 10px 0;
+        font-size: 1.2rem;
+        color: #333;
+    }
+    
+    .experience-card {
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        margin-bottom: 15px;
+        padding: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+    
+    .experience-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .card-sno {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 8px 12px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 0.9rem;
+        min-width: 45px;
+        text-align: center;
+    }
+    
+    .card-name {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #333;
+        margin: 0;
+        flex: 1;
+        margin-left: 15px;
+    }
+    
+    .card-details {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+    
+    .detail-item {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .detail-label {
+        font-size: 0.75rem;
+        color: #666;
+        text-transform: uppercase;
+        font-weight: 600;
+        margin-bottom: 4px;
+        letter-spacing: 0.5px;
+    }
+    
+    .detail-value {
+        font-size: 0.9rem;
+        color: #333;
+        font-weight: 500;
+    }
+    
+    .type-badge {
+        background: linear-gradient(135deg, #17a2b8, #20c997);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        text-align: center;
+        display: inline-block;
+    }
+    
+    .card-actions {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+        padding-top: 15px;
+        border-top: 1px solid #f0f0f0;
+    }
+    
+    .mobile-action-btn {
+        flex: 1;
+        padding: 10px 15px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 500;
+        text-align: center;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+    }
+    
+    .mobile-btn-preview {
+        background: #6c757d;
+        color: white;
+    }
+    
+    .mobile-btn-preview:hover {
+        background: #545b62;
+        color: white;
+        transform: translateY(-1px);
+    }
+    
+    .mobile-btn-edit {
+        background: #ffc107;
+        color: #212529;
+    }
+    
+    .mobile-btn-edit:hover {
+        background: #e0a800;
+        color: #212529;
+        transform: translateY(-1px);
+    }
+    
+    .mobile-btn-delete {
+        background: #dc3545;
+        color: white;
+    }
+    
+    .mobile-btn-delete:hover {
+        background: #c82333;
+        color: white;
+        transform: translateY(-1px);
+    }
+    
+    /* Adjust search container for mobile */
+    .header-actions .d-flex.align-items-center {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+    
+    .welcome-text {
+        text-align: center;
+        font-size: 1.1rem;
+        color: #333;
+        margin-bottom: 10px;
+    }
+    
+    /* No results styling for mobile */
+    .no-results {
+        padding: 30px 20px;
+        text-align: center;
+    }
+    
+    .no-results i {
+        font-size: 2rem !important;
+        margin-bottom: 15px;
+    }
+    
+    .no-results h5 {
+        font-size: 1.1rem;
+        margin-bottom: 10px;
+    }
+    
+    .no-results p {
+        font-size: 0.9rem;
+        margin-bottom: 0;
+    }
+}
+
+@media (max-width: 576px) {
+    .main-container {
+        margin: 5px;
+        padding: 12px;
+    }
+    
+    .page-title {
+        font-size: 1.3rem;
+    }
+    
+    .search-container {
+        padding: 12px;
+    }
+    
+    .experience-card {
+        padding: 15px;
+        margin-bottom: 12px;
+    }
+    
+    .card-details {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .detail-item {
+        padding: 8px 0;
+    }
+    
+    .card-actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .mobile-action-btn {
+        padding: 12px;
+        font-size: 0.9rem;
+    }
+    
+    .card-name {
+        font-size: 1rem;
+        margin-left: 10px;
+    }
+    
+    .card-sno {
+        padding: 6px 10px;
+        font-size: 0.8rem;
+        min-width: 40px;
+    }
+}
+
+/* Show mobile cards only on mobile */
+@media (min-width: 769px) {
+    .mobile-card-container {
+        display: none;
+    }
+}
+
+/* Custom scrollbar for mobile */
+@media (max-width: 768px) {
+    ::-webkit-scrollbar {
+        width: 4px;
+    }
+    
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 2px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+}
+@media (max-width: 768px) {
+    /* Hide the default table on mobile */
+    .table-container .table-responsive {
+        display: none;
+    }
+    
+    /* Create card-based layout for mobile */
+    .mobile-card-container {
+        display: block;
+    }
+    
+    .experience-card {
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        margin-bottom: 15px;
+        padding: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+    
+    .experience-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .card-sno {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 8px 12px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 0.9rem;
+        min-width: 45px;
+        text-align: center;
+    }
+    
+    .card-name {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #333;
+        margin: 0;
+        flex: 1;
+        margin-left: 15px;
+    }
+    
+    .card-details {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+    
+    .detail-item {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .detail-label {
+        font-size: 0.75rem;
+        color: #666;
+        text-transform: uppercase;
+        font-weight: 600;
+        margin-bottom: 4px;
+        letter-spacing: 0.5px;
+    }
+    
+    .detail-value {
+        font-size: 0.9rem;
+        color: #333;
+        font-weight: 500;
+    }
+    
+    .type-badge {
+        background: linear-gradient(135deg, #17a2b8, #20c997);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        text-align: center;
+        display: inline-block;
+    }
+    
+    .card-actions {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+        padding-top: 15px;
+        border-top: 1px solid #f0f0f0;
+    }
+    
+    .mobile-action-btn {
+        flex: 1;
+        padding: 10px 15px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 500;
+        text-align: center;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+    }
+    
+    .mobile-btn-preview {
+        background: #6c757d;
+        color: white;
+    }
+    
+    .mobile-btn-preview:hover {
+        background: #545b62;
+        color: white;
+        transform: translateY(-1px);
+    }
+    
+    .mobile-btn-edit {
+        background: #ffc107;
+        color: #212529;
+    }
+    
+    .mobile-btn-edit:hover {
+        background: #e0a800;
+        color: #212529;
+        transform: translateY(-1px);
+    }
+    
+    .mobile-btn-delete {
+        background: #dc3545;
+        color: white;
+    }
+    
+    .mobile-btn-delete:hover {
+        background: #c82333;
+        color: white;
+        transform: translateY(-1px);
+    }
+    
+    /* Adjust search container for mobile */
+    .header-actions .d-flex.align-items-center {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+    
+    .welcome-text {
+        text-align: center;
+        font-size: 1.1rem;
+        color: #333;
+        margin-bottom: 10px;
+    }
+    
+    /* No results styling for mobile */
+    .no-results {
+        padding: 30px 20px;
+        text-align: center;
+    }
+    
+    .no-results i {
+        font-size: 2rem !important;
+        margin-bottom: 15px;
+    }
+    
+    .no-results h5 {
+        font-size: 1.1rem;
+        margin-bottom: 10px;
+    }
+    
+    .no-results p {
+        font-size: 0.9rem;
+        margin-bottom: 0;
+    }
+}
+
+@media (max-width: 576px) {
+    .main-container {
+        margin: 5px;
+        padding: 12px;
+    }
+    
+    .page-title {
+        font-size: 1.3rem;
+    }
+    
+    .search-container {
+        padding: 12px;
+    }
+    
+    .experience-card {
+        padding: 15px;
+        margin-bottom: 12px;
+    }
+    
+    .card-details {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .detail-item {
+        padding: 8px 0;
+    }
+    
+    .card-actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .mobile-action-btn {
+        padding: 12px;
+        font-size: 0.9rem;
+    }
+    
+    .card-name {
+        font-size: 1rem;
+        margin-left: 10px;
+    }
+    
+    .card-sno {
+        padding: 6px 10px;
+        font-size: 0.8rem;
+        min-width: 40px;
+    }
+}
+
+/* Show mobile cards only on mobile */
+@media (min-width: 769px) {
+    .mobile-card-container {
+        display: none;
+    }
+}
+
+/* Custom scrollbar for mobile */
+@media (max-width: 768px) {
+    ::-webkit-scrollbar {
+        width: 4px;
+    }
+    
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 2px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+}
     </style>
 
 </head>
@@ -309,7 +883,45 @@
                     </table>
                 </div>
             </div>
-
+<!-- Add this right after the closing </div> of table-container -->
+<div class="mobile-card-container" id="mobileCardContainer" style="display: none;">
+    <% let snomob = 0; %>
+    <% experienceList.forEach((experience) => { %>
+        <div class="experience-card">
+            <div class="card-header">
+                <div class="card-sno">0<%= ++snomob %></div>
+                <h3 class="card-name"><%= experience.name %></h3>
+            </div>
+            <div class="card-details">
+                <div class="detail-item">
+                    <span class="detail-label">Company</span>
+                    <span class="detail-value"><%= experience.company %></span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Domain</span>
+                    <span class="detail-value"><%= experience.domain %></span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Year</span>
+                    <span class="detail-value"><%= experience.year %></span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Type</span>
+                    <span class="type-badge"><%= experience.type %></span>
+                </div>
+            </div>
+            <div class="card-actions">
+                <a href="/experience/<%= experience._id %>" target="_blank" 
+                   class="mobile-action-btn mobile-btn-preview">
+                    <i class="fas fa-external-link-alt"></i>Preview
+                </a>
+                <a href="/edit/<%= experience._id %>" class="mobile-action-btn mobile-btn-edit">
+                    <i class="fas fa-pencil-alt"></i>Edit
+                </a>
+            </div>
+        </div>
+    <% }) %>
+</div>
             <div id="noResults" class="no-results" style="display: none;">
                 <i class="fas fa-search fa-3x text-muted mb-3"></i>
                 <h5>No experiences found</h5>
@@ -320,121 +932,223 @@
 
     <!-- Embed data from backend into JS -->
     <script>
-        const allExperiences = JSON.stringify(experienceList);
-    </script>
+    const experienceList = <%- JSON.stringify(experienceList) %>;
+</script>
 
     <!-- Filter and render logic -->
-    <script>
-        const tableBody = document.getElementById("experienceTableBody");
-        const searchInput = document.getElementById("searchInput");
-        const resultCount = document.getElementById("resultCount");
-        const noResults = document.getElementById("noResults");
-        const tableContainer = document.querySelector(".table-container");
+<script>
+    // Fixed and cleaned up JavaScript code
+const tableBody = document.getElementById("experienceTableBody");
+const searchInput = document.getElementById("searchInput");
+const resultCount = document.getElementById("resultCount");
+const noResults = document.getElementById("noResults");
+const tableContainer = document.querySelector(".table-container");
+const mobileContainer = document.getElementById('mobileCardContainer');
 
-        function updateResultCount(count) {
-            resultCount.textContent = `${count} result${count !== 1 ? 's' : ''} found`;
+// Parse the experience data safely
+let allExperiences = [];
+try {
+    allExperiences = typeof experienceList !== 'undefined' ? experienceList : [];
+} catch (e) {
+    console.log('experienceList not found, using empty array');
+    allExperiences = [];
+}
+
+function updateResultCount(count) {
+    if (resultCount) {
+        resultCount.textContent = `${count} result${count !== 1 ? 's' : ''} found`;
+    }
+}
+
+function renderDesktopTable(experiences) {
+    if (!tableBody) return;
+    
+    tableBody.innerHTML = experiences.map((experience, index) => `
+        <tr>
+            <td><strong>0${index + 1}</strong></td>
+            <td>${experience.name || ''}</td>
+            <td>${experience.company || ''}</td>
+            <td>${experience.domain || ''}</td>
+            <td>${experience.year || ''}</td>
+            <td>
+                <span class="badge bg-info">${experience.type || ''}</span>
+            </td>
+            <td>
+                <a href="/experience/${experience._id}" target="_blank" 
+                   class="action-btn btn-preview">
+                    <i class="fas fa-external-link-alt"></i>
+                </a>
+            </td>
+            <td>
+                <a href="/edit/${experience._id}" class="action-btn btn-edit">
+                    <i class="fas fa-pencil-alt"></i>
+                </a>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function renderMobileCards(experiences) {
+    if (!mobileContainer) return;
+    
+    mobileContainer.innerHTML = experiences.map((experience, index) => `
+        <div class="experience-card">
+            <div class="card-header">
+                <div class="card-sno">0${index + 1}</div>
+                <h3 class="card-name">${experience.name || ''}</h3>
+            </div>
+            <div class="card-details">
+                <div class="detail-item">
+                    <span class="detail-label">Company</span>
+                    <span class="detail-value">${experience.company || ''}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Domain</span>
+                    <span class="detail-value">${experience.domain || ''}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Year</span>
+                    <span class="detail-value">${experience.year || ''}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Type</span>
+                    <span class="type-badge">${experience.type || ''}</span>
+                </div>
+            </div>
+            <div class="card-actions">
+                <a href="/experience/${experience._id}" target="_blank" 
+                   class="mobile-action-btn mobile-btn-preview">
+                    <i class="fas fa-external-link-alt"></i>Preview
+                </a>
+                <a href="/edit/${experience._id}" class="mobile-action-btn mobile-btn-edit">
+                    <i class="fas fa-pencil-alt"></i>Edit
+                </a>
+            </div>
+        </div>
+    `).join('');
+
+    // Add animations to newly created cards
+    const cards = mobileContainer.querySelectorAll('.experience-card');
+    cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+            card.style.transition = 'all 0.3s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 100);
+    });
+}
+
+function handleResponsiveView() {
+    if (!tableContainer || !mobileContainer) return;
+    
+    if (window.innerWidth <= 768) {
+        tableContainer.style.display = 'none';
+        mobileContainer.style.display = 'block';
+    } else {
+        tableContainer.style.display = 'block';
+        mobileContainer.style.display = 'none';
+    }
+}
+
+function renderExperiences(experiences) {
+    if (experiences.length === 0) {
+        if (tableContainer) tableContainer.style.display = 'none';
+        if (mobileContainer) mobileContainer.style.display = 'none';
+        if (noResults) noResults.style.display = 'block';
+        updateResultCount(0);
+        return;
+    }
+
+    if (noResults) noResults.style.display = 'none';
+    updateResultCount(experiences.length);
+
+    // Show appropriate container based on screen size
+    if (window.innerWidth <= 768) {
+        if (tableContainer) tableContainer.style.display = 'none';
+        if (mobileContainer) mobileContainer.style.display = 'block';
+        renderMobileCards(experiences);
+    } else {
+        if (tableContainer) tableContainer.style.display = 'block';
+        if (mobileContainer) mobileContainer.style.display = 'none';
+        renderDesktopTable(experiences);
+    }
+}
+
+// Search functionality
+if (searchInput) {
+    searchInput.addEventListener("input", () => {
+        const keyword = searchInput.value.trim().toLowerCase();
+
+        if (!keyword) {
+            renderExperiences(allExperiences);
+            return;
         }
 
-        function renderExperiences(experiences) {
-            if (experiences.length === 0) {
-                tableContainer.style.display = 'none';
-                noResults.style.display = 'block';
-                updateResultCount(0);
-                return;
-            }
+        const filtered = allExperiences.filter(item =>
+            (item.name && item.name.toLowerCase().includes(keyword)) ||
+            (item.company && item.company.toLowerCase().includes(keyword)) ||
+            (item.domain && item.domain.toLowerCase().includes(keyword)) ||
+            (item.type && item.type.toLowerCase().includes(keyword))
+        );
 
-            tableContainer.style.display = 'block';
-            noResults.style.display = 'none';
-            updateResultCount(experiences.length);
+        renderExperiences(filtered);
+    });
+}
 
-            tableBody.innerHTML = experiences.map(experience => `
-                <tr>
-                    <td><strong>${experience.regno}</strong></td>
-                    <td>${experience.name}</td>
-                    <td>${experience.email}</td>
-                    <td>${experience.company}</td>
-                    <td>${experience.year}</td>
-                    <td>
-                        <span class="badge bg-info">${experience.type}</span>
-                    </td>
-                    <td>
-                        <a href="${experience.readLink}" target="_blank" 
-                           class="action-btn btn-preview">
-                            <i class="fas fa-external-link-alt"></i>
-                        </a>
-                    </td>
-                    <td>
-                        <a href="/edit/${experience._id}" class="action-btn btn-edit">
-                            <i class="fas fa-pencil-alt"></i>
-                        </a>
-                    </td>
-                    <td>
-                        <button onclick="confirmDelete('${experience._id}')" 
-                                class="action-btn btn-delete border-0">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
-        }
+function confirmDelete(id) {
+    if (confirm('Are you sure you want to delete this experience? This action cannot be undone.')) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `/delete/${id}`;
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
 
-        searchInput.addEventListener("input", () => {
-            const keyword = searchInput.value.trim().toLowerCase();
+// Initialize everything when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Initial responsive check
+    handleResponsiveView();
+    
+    // Initialize result count
+    updateResultCount(allExperiences.length);
+    
+    // Initial render
+    renderExperiences(allExperiences);
+    
+    // Add animations to existing desktop table rows
+    const rows = document.querySelectorAll('tbody tr');
+    rows.forEach((row, index) => {
+        row.style.opacity = '0';
+        row.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+            row.style.transition = 'all 0.3s ease';
+            row.style.opacity = '1';
+            row.style.transform = 'translateY(0)';
+        }, index * 50);
+    });
+});
 
-            if (!keyword) {
-                renderExperiences(allExperiences);
-                return;
-            }
-
-            const filtered = allExperiences.filter(item =>
-                item.regno.toLowerCase().includes(keyword) ||
-                item.name.toLowerCase().includes(keyword) ||
-                item.email.toLowerCase().includes(keyword) ||
-                item.company.toLowerCase().includes(keyword)
-            );
-
-            renderExperiences(filtered);
-        });
-
-        function confirmDelete(id) {
-            if (confirm('Are you sure you want to delete this experience? This action cannot be undone.')) {
-                // Create a form and submit it for deletion
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = `/delete/${id}`;
-                
-                // Add CSRF token if needed
-                // const csrfToken = document.querySelector('meta[name="csrf-token"]');
-                // if (csrfToken) {
-                //     const input = document.createElement('input');
-                //     input.type = 'hidden';
-                //     input.name = '_token';
-                //     input.value = csrfToken.getAttribute('content');
-                //     form.appendChild(input);
-                // }
-                
-                document.body.appendChild(form);
-                form.submit();
-            }
-        }
-
-        // Initialize result count
-        updateResultCount(allExperiences.length);
-
-        // Add some smooth animations
-        document.addEventListener('DOMContentLoaded', function() {
-            const rows = document.querySelectorAll('tbody tr');
-            rows.forEach((row, index) => {
-                row.style.opacity = '0';
-                row.style.transform = 'translateY(20px)';
-                setTimeout(() => {
-                    row.style.transition = 'all 0.3s ease';
-                    row.style.opacity = '1';
-                    row.style.transform = 'translateY(0)';
-                }, index * 50);
-            });
-        });
-    </script>
+// Handle resize events
+window.addEventListener('resize', () => {
+    handleResponsiveView();
+    // Re-render current view after resize
+    const currentKeyword = searchInput ? searchInput.value.trim().toLowerCase() : '';
+    if (currentKeyword) {
+        const filtered = allExperiences.filter(item =>
+            (item.name && item.name.toLowerCase().includes(currentKeyword)) ||
+            (item.company && item.company.toLowerCase().includes(currentKeyword)) ||
+            (item.domain && item.domain.toLowerCase().includes(currentKeyword)) ||
+            (item.type && item.type.toLowerCase().includes(currentKeyword))
+        );
+        renderExperiences(filtered);
+    } else {
+        renderExperiences(allExperiences);
+    }
+});
+</script>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
